@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import IMG from '../images/bg-header-desktop.svg'
+import IMG from '../imgs/bg-header-desktop.svg'
 
 
 import Jobs from '../components/Jobs'
@@ -21,6 +21,7 @@ background-color: #5DA5A4;
 const Main = styled.main`
 background-color: #F0FAFB;
 padding: 2rem 0;
+position: relative;
 `
 
 function Home() {

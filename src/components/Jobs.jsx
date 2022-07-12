@@ -14,10 +14,17 @@ align-items: center;
 justify-content: space-between;
 border-radius: 5px;
 border-left: ${props => props.isBorder ? "#5AA5A1 5px solid" : "none"};
+box-shadow: 0px 12px 11px #d5eaed;
 @media (max-width: 720px) {
-  width: 65%;
+  width: 85%;
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
+  position: relative;
+  margin-bottom: 4rem;
+}
+@media (max-width: 290px) {
+padding-left: 10px;
 }
 `
 
@@ -26,8 +33,11 @@ display: flex;
 align-items: center;
 &:nth-child(1){
   @media (max-width: 720px) {
+  width: 100%;
   flex-direction: column;
   align-items: flex-start;
+  position: inherit;
+  top: -45px;
 }
 }
 `
@@ -39,6 +49,10 @@ margin-right: 20px;
 const Img = styled.img`
 object-fit: contain;
 height: 70px;
+@media (max-width: 720px) {
+  height: 50px;
+  margin-bottom: 15px;
+}
 `
 
 const ContainerTitle = styled.div`
@@ -52,7 +66,8 @@ color: #65A49C;
 
 const Status = styled.span`
 text-transform: uppercase;
-font-size: 11px;
+font-size: 15px;
+font-weight: 500;
 color: #FFF;
 padding: 3px 5px;
 border-radius: 10px;
@@ -68,6 +83,8 @@ border-radius: 10px;
 const Position = styled.h1`
 font-size: 15px;
 color: #3D4746;
+margin: 15px 0;
+cursor: pointer;
 &:hover{
   color: #65A49C;
 }
@@ -84,6 +101,10 @@ color:  #949D9A;
   border-radius: 50%;
   background-color: #949D9A;
 }
+@media (max-width: 720px) {
+  font-size: 15px;
+  font-weight: 500;
+}
 `
 
 const ContainerDescription = styled.div`
@@ -92,7 +113,7 @@ flex-wrap: wrap;
 `
 
 const Description = styled.p`
-margin: 0 10px;
+margin: 0 10px 10px;
 color: #669E9D;
 background-color: #ECF6F7;
 padding: 5px;
@@ -106,12 +127,99 @@ cursor: pointer;
 }
 `
 
+const Border = styled.div`
+display: none;
+@media (max-width: 720px) {
+  display: block;
+  width: 100%;
+  margin-bottom: 20px;
+  border-bottom: solid 1px #BFC1C0 ;
+}
+`
+
+const ContainerFilter = styled.div`
+width: 80%;
+margin: 0 auto;
+background-color: #FFF;
+padding: 5px 40px;
+padding-top: 15px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-radius: 5px;
+position: inherit;
+top: -60px;
+box-shadow: 0px 12px 11px #d5eaed;
+@media (max-width: 720px) {
+  width: 85%;
+  padding: 20px;
+}
+`
+
+
+const Clear = styled.p`
+color: #889291;
+font-size: 15px;
+font-weight: 700;
+cursor: pointer;
+&:hover {
+  color: #5DA4A6;
+  border-bottom: 1px solid #5DA4A6;
+}
+`
+
+const ConatinerClear = styled.div`
+margin: 0 10px 10px;
+display: flex;
+`
+
+const DescriptionFilter = styled.p`
+color: #669E9D;
+background-color: #ECF6F7;
+padding: 5px;
+border-radius: 5px 0 0 5px;
+font-size: 15px;
+font-weight: 700;
+
+/* &:hover {
+  color: #EAFFFF;
+  background-color: #5DA4A6;
+} */
+`
+
+const MyClear = styled.button`
+border: none;
+background-color: #58A4A2;
+padding: 5px 10px;
+border-radius: 0 5px 5px 0;
+cursor: pointer;
+&:hover {
+  background-color: #283636;
+}
+`
 
 function Jobs() {
-  const { jobs } = useContext(Context)
+  const { jobs, Search, Filter, Clean, OneClean } = useContext(Context)
 
   return (
     <>
+      {
+        Filter.length > 0
+          ? (
+            <ContainerFilter>
+              <ContainerDescription>
+                {Filter.map((item, i) => (
+                  <ConatinerClear key={i}>
+                    <DescriptionFilter >{item}</DescriptionFilter>
+                    <MyClear onClick={() => OneClean(item)} >X</MyClear>
+                  </ConatinerClear >
+                ))}
+              </ContainerDescription>
+              <Clear onClick={() => Clean()} >Clear</Clear>
+            </ContainerFilter>
+          )
+          : " "
+      }
       {
         jobs.map((item, i) => (
           <Container isBorder={item.featured} key={i}>
@@ -145,14 +253,17 @@ function Jobs() {
                 </Box>
               </ContainerTitle>
             </Box>
+            <Border />
             <ContainerDescription>
-              <Description>{item.role}</Description>
-              <Description>{item.level}</Description>
-              {item.languages.map((languages) => (
-                <Description>{languages}</Description>
+              <Description onClick={() => Search(item.role)} >{item.role}</Description>
+              <Description onClick={() => Search(item.level)} >{item.level}</Description>
+              {item.languages.map((languages, i) => (
+                <Description key={i} onClick={() => Search(languages)} >{languages}</Description>
               ))}
               {item.tools.length > 0 ? (
-                <Description>{item.tools}</Description>
+                item.tools.map((tools, i) => (
+                  <Description key={i} onClick={() => Search(tools)} >{tools}</Description>
+                ))
               ) : " "}
             </ContainerDescription>
           </Container>
